@@ -1,3 +1,4 @@
+let pos = 0;
 function backbite(n, path) {
   let i; 
   let j;
@@ -118,14 +119,11 @@ function clearCanvas(){
 	ctx.clearRect(0, 0, 400, 400);
 }
 function drawRect(path){
-	let i;
-	for(i = 0; i<path.length; i++){
-	console.log(i);
-	}
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");
 	ctx.fillStyle = "red";
-	ctx.fillRect(path[i][i], path[i-1][i-1], 20, 20);
+	ctx.fillRect(path[pos][0] * 20, path[pos][1] * 20, 20, 20);
+    pos++;
 }
 function update(path){
 	clearCanvas();
