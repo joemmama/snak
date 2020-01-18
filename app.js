@@ -1,21 +1,26 @@
-let pos = 0;
-var apple = [];
-var appleX = Math.floor(Math.random() * 20) + 1;
-var appleY = Math.floor(Math.random() * 20) + 1;
-apple.push([appleX, appleY]);
+var pos = 0;
+var appleX = Math.floor(Math.random() * 20);
+var appleY = Math.floor(Math.random() * 20);
+var apple = false;
+var snakeX = [];
+var snakeY = [];
+var path;
+var c;
+var ctx;
+var speed;
 function backbite(n, path) {
-  let i; 
-  let j;
-  let x; 
-  let y;
-  let dx;
-  let dy;
-  let xedge;
-  let yedge;
-  let iedge;
-  let add_edge;
-  let success;
-  let temp;
+  var i; 
+  var j;
+  var x; 
+  var y;
+  var dx;
+  var dy;
+  var xedge;
+  var yedge;
+  var iedge;
+  var add_edge;
+  var success;
+  var temp;
   const itemp = Math.floor(Math.random() * 2);
   const nsq = n * n;
 
@@ -54,8 +59,8 @@ function backbite(n, path) {
 
 function generate_hamiltonian_path(n, q) {
   const path = new Array(n * n);
-  let i; let j;
-  let nsuccess; let
+  var i; var j;
+  var nsuccess; var
     nattempts;
   for (i = 0; i < n; i++) {
     if (i % 2 == 0) {
@@ -93,11 +98,9 @@ function generate_hamiltonian_circuit(n, q) {
   return path;
 }
 
-function drawGrid(path){
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
+function drawGrid(){
 ctx.strokeStyle = "black";
-for (let i = 1; i <= 20; i++){
+for (var i = 1; i <= 20; i++){
 	ctx.moveTo(i * 20, 0);
 	ctx.lineTo(i * 20, 400);
 	ctx.stroke();
@@ -108,49 +111,63 @@ for (let i = 1; i <= 20; i++){
 }
 
 function clearCanvas(){
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	ctx.clearRect(0, 0, 400, 400);
 }
-function drawRect(path){
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-	ctx.fillStyle = "green";
-	ctx.fillRect(path[pos][0] * 20, path[pos][1] * 20, 20, 20);
+function drawRect(){
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, 400, 400);
     ctx.fillStyle = "red";
-    ctx.fillRect(apple[0][0] * 20, apple[0][1] * 20, 20, 20);
-    if(path[pos][0] == apple[0][0] && path[pos][1] == apple[0][1]){
-        console.log("bruh");
-    }
+    ctx.fillRect(appleX * 20, appleY * 20, 20, 20);
+	snakeX.unshift(path[pos][0]);
+	snakeY.unshift(path[pos][1]);
+	if(snakeX[0] == appleX && snakeY[0] == appleY){
+		apple = true;
+	}
+	else
+	{
+		apple = false;
+	}
     if(pos < 399){
     pos++;
     }else{
         pos = 0;
     }
+	ctx.fillStyle = "green";
+	for (var i = 0; i < snakeX.length; i++)
+	{
+		if (i == 0)
+		{
+			ctx.fillStyle = "#00f000";
+		}
+		else
+		{
+			ctx.fillStyle = "green";
+		}
+		ctx.fillRect(snakeX[i] * 20, snakeY[i] * 20, 20, 20);
+	}
+	if (!apple)
+	{
+		snakeX.pop();
+		snakeY.pop();
+	}
+	else{
+		appleX = Math.floor(Math.random() * 20);
+		appleY = Math.floor(Math.random() * 20);
+	}
 }
-function update(path){
+function update(){
 	clearCanvas();
-	drawRect(path);
-	drawGrid();
-    collision(path);
-}
-function collision(path){
-    
-}
-function drawApple(){
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.fillStyle = "red";
-    ctx.fillRect(apple[0][0] * 20, apple[0][1] * 20, 20, 20);
-}
+	drawRect();
+	}
 function refresh_path() {
-  var myCanvas = document.getElementById("myCanvas");
-  var ctx = myCanvas.getContext("2d");
+  speed = 10;
+  myCanvas = document.getElementById("myCanvas");
+  ctx = myCanvas.getContext("2d");
   var myWidth = 400;
   var myHeight = 400;
   const n = 20;
   const q = 1;
-  const path = generate_hamiltonian_circuit(n, q);
-  var interval = setInterval(function(){update(path);}, 30);
+  path = generate_hamiltonian_circuit(n, q);
+  var interval = setInterval(function(){update();}, speed);
   return;
 }
