@@ -7,7 +7,8 @@ var snakeY = [];
 var path;
 var c;
 var ctx;
-var speed;
+var speed = 1;
+var progress = 0;
 function backbite(n, path) {
   var i; 
   var j;
@@ -151,16 +152,26 @@ function drawRect(){
 		snakeY.pop();
 	}
 	else{
+        if(progress == 400){
+            progress = 400;
+        }else{
+            progress++;
+        }
 		appleX = Math.floor(Math.random() * 20);
 		appleY = Math.floor(Math.random() * 20);
 	}
 }
+function pBar(){
+    document.getElementById("progress").value = progress;
+    document.getElementById("outOf").innerHTML = `${progress} out of 400`;
+}
 function update(){
 	clearCanvas();
 	drawRect();
+    pBar();
 	}
+
 function refresh_path() {
-  speed = 10;
   myCanvas = document.getElementById("myCanvas");
   ctx = myCanvas.getContext("2d");
   var myWidth = 400;
